@@ -35,3 +35,8 @@ Currently, WIP, no License were specified. Treat as "Propriety". Will change to 
 ## Misc.
 
 Datasheet file is in directory `datasheet`. This file is **NOT** covered in this repository's license. This file is only provided as a reference.
+
+## By the way, what is this for?
+
+This server is used to build one of my another project, which is building a personal AR HUD system.
+The sensor data provided by my AR glasses internal IMU were not usable at all, so I have to use a external IMU to track the motion of glasses.
