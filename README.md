@@ -6,6 +6,19 @@ A simple server to convert ATK-IMU901 serial data into WebSocket stream.
 
 WIP, proof of concept at very early stage.
 
+### Todo list
+- [ ] Serial communication logic 
+  - [X] Decode for reported measurement data
+  - [ ] Data encoding for configuring IMU device
+  - [ ] Decode for configuration confirmation data
+- [ ] WebSocket Server  
+  - [ ] WebSocket data payload format design
+  - [ ] Combine WebSocket streaming with event data from IMU  
+- [ ] Generic application logic
+  - [ ] Able to select serial port by commandline argument
+  - [ ] Able to select serial port by environment variable
+  - [ ] Able to select serial port by config file
+
 ## Hardware
 
 Purchase link (Taobao): https://detail.tmall.com/item.htm?id=623564385801&skuId=4581762262708
@@ -17,7 +30,7 @@ Purchase link (Taobao): https://detail.tmall.com/item.htm?id=623564385801&skuId=
 
 ## License
 
-Currently WIP, no License were specified. Treat as "Propriety". Will change to other open source license later.
+Currently, WIP, no License were specified. Treat as "Propriety". Will change to other open source license later.
 
 ## Misc.
 
