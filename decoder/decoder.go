@@ -107,11 +107,16 @@ func Decode_Start(port serial.Port, gyroRange DeviceGyroRange) error {
 		if magnetic_data == nil {
 			break
 		}
-		fmt.Printf("MAGNETIC: \t\tmagX=%3.3f\tmagY=%3.3f\tmagZ=%3.3f\ttemp=%3.3f\n",
-			magnetic_data.magnetX, magnetic_data.magnetY, magnetic_data.magnetZ, magnetic_data.temperature)
+		//fmt.Printf("MAGNETIC: \t\tmagX=%3.3f\tmagY=%3.3f\tmagZ=%3.3f\ttemp=%3.3f°C\n",
+		//	magnetic_data.magnetX, magnetic_data.magnetY, magnetic_data.magnetZ, magnetic_data.temperature)
 		break
 	case PRESSURE:
-		//println("PRESSURE")
+		pressure_data := Decode_Pressure(data_block)
+		if pressure_data == nil {
+			break
+		}
+		fmt.Printf("PRESSURE: \t\tpressure=%dPa\taltitude=%dcm\ttemperature=%3.3f°C\n",
+			pressure_data.pressure, pressure_data.altitude, pressure_data.temperature)
 		break
 	case PORTSTAT:
 		//println("PORTSTAT")
