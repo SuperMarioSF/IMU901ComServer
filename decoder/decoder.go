@@ -107,7 +107,7 @@ func Decode_Start(port serial.Port, gyroRange DeviceGyroRange) error {
 		if magnetic_data == nil {
 			break
 		}
-		fmt.Printf("MAGNETIC: \t\tmagX=%3.3f\tmagY=%3.3f\tmagZ=%3.3f\ttemp=%3.3f°C\n",
+		fmt.Printf("MAGNETIC: \tmagX=%3.3f\tmagY=%3.3f\tmagZ=%3.3f\ttemp=%3.3f°C\n",
 			magnetic_data.magnetX, magnetic_data.magnetY, magnetic_data.magnetZ, magnetic_data.temperature)
 		break
 	case PRESSURE:
