@@ -47,8 +47,12 @@ func OpenSerialPort(port_name string, mode *serial.Mode) serial.Port {
 
 func main_loop(port serial.Port) {
 	var err error
+	gyroRange, errGyro := decoder.GetDeviceGyroRange(port)
+	if errGyro != nil {
+		log.Fatal(errGyro) // quit here
+	}
 	for {
-		err = decoder.Decode_Start(port)
+		err = decoder.Decode_Start(port, gyroRange)
 
 		if err == io.EOF {
 			return

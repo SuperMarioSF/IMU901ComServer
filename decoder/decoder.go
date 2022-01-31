@@ -25,7 +25,7 @@ func readchar(port serial.Port, size int) ([]byte, error) {
 	return char_arr, nil
 }
 
-func Decode_Start(port serial.Port) error {
+func Decode_Start(port serial.Port, gyroRange DeviceGyroRange) error {
 	char_a_bytearr, errA := readchar(port, 1)
 	if errA != nil {
 		return errA
@@ -83,19 +83,24 @@ func Decode_Start(port serial.Port) error {
 		if euler_data == nil {
 			break
 		}
-		fmt.Printf("EULER: \t\troll=%3.3f\tpitch=%3.3f\tyaw=%3.3f\n",
-			euler_data.roll, euler_data.pitch, euler_data.yaw)
+		//fmt.Printf("EULER: \t\troll=%3.3f\tpitch=%3.3f\tyaw=%3.3f\n",
+		//	euler_data.roll, euler_data.pitch, euler_data.yaw)
 		break
 	case QUATERNION:
 		quaternion_data := Decode_Quatenion(data_block)
 		if quaternion_data == nil {
 			break
 		}
-		fmt.Printf("QUATERNION: \tq0=%3.3f\tq1=%3.3f\tq2=%3.3f\tq3=%3.3f\n",
-			quaternion_data.q0, quaternion_data.q1, quaternion_data.q2, quaternion_data.q3)
+		//fmt.Printf("QUATERNION: \tq0=%3.3f\tq1=%3.3f\tq2=%3.3f\tq3=%3.3f\n",
+		//	quaternion_data.q0, quaternion_data.q1, quaternion_data.q2, quaternion_data.q3)
 		break
 	case GYRO:
-		println("GYRO")
+		gyro_data := Decode_Gyro(data_block, gyroRange)
+		if gyro_data == nil {
+			break
+		}
+		fmt.Printf("GYRO: \t\taccX=%3.3f accY=%3.3f accZ=%3.3f gyroX=%3.3f gyroY=%3.3f gyroZ=%3.3f\n",
+			gyro_data.accX, gyro_data.accY, gyro_data.accZ, gyro_data.gyroX, gyro_data.gyroY, gyro_data.gyroZ)
 		break
 	case MAGNETIC:
 		println("MAGNETIC")
