@@ -83,46 +83,53 @@ func Decode_Start(port serial.Port, gyroRange DeviceGyroRange) error {
 		if euler_data == nil {
 			break
 		}
-		//fmt.Printf("EULER: \t\troll=%3.3f\tpitch=%3.3f\tyaw=%3.3f\n",
-		//	euler_data.roll, euler_data.pitch, euler_data.yaw)
+		fmt.Printf("EULER: \t\troll=%3.3f\tpitch=%3.3f\tyaw=%3.3f\n",
+			euler_data.roll, euler_data.pitch, euler_data.yaw)
 		break
 	case QUATERNION:
 		quaternion_data := Decode_Quatenion(data_block)
 		if quaternion_data == nil {
 			break
 		}
-		//fmt.Printf("QUATERNION: \tq0=%3.3f\tq1=%3.3f\tq2=%3.3f\tq3=%3.3f\n",
-		//	quaternion_data.q0, quaternion_data.q1, quaternion_data.q2, quaternion_data.q3)
+		fmt.Printf("QUATERNION: \tq0=%3.3f\tq1=%3.3f\tq2=%3.3f\tq3=%3.3f\n",
+			quaternion_data.q0, quaternion_data.q1, quaternion_data.q2, quaternion_data.q3)
 		break
 	case GYRO:
 		gyro_data := Decode_Gyro(data_block, gyroRange)
 		if gyro_data == nil {
 			break
 		}
-		//fmt.Printf("GYRO: \t\taccX=%3.3f accY=%3.3f accZ=%3.3f gyroX=%3.3f gyroY=%3.3f gyroZ=%3.3f\n",
-		//	gyro_data.accX, gyro_data.accY, gyro_data.accZ, gyro_data.gyroX, gyro_data.gyroY, gyro_data.gyroZ)
+		fmt.Printf("ACCEL: \t\taccX=%3.3f\taccY=%3.3f\taccZ=%3.3f\nGYRO: \t\tgyroX=%3.3f\tgyroY=%3.3f\tgyroZ=%3.3f\n",
+			gyro_data.accX, gyro_data.accY, gyro_data.accZ, gyro_data.gyroX, gyro_data.gyroY, gyro_data.gyroZ)
 		break
 	case MAGNETIC:
 		magnetic_data := Decode_Magnetic(data_block)
 		if magnetic_data == nil {
 			break
 		}
-		//fmt.Printf("MAGNETIC: \t\tmagX=%3.3f\tmagY=%3.3f\tmagZ=%3.3f\ttemp=%3.3f°C\n",
-		//	magnetic_data.magnetX, magnetic_data.magnetY, magnetic_data.magnetZ, magnetic_data.temperature)
+		fmt.Printf("MAGNETIC: \t\tmagX=%3.3f\tmagY=%3.3f\tmagZ=%3.3f\ttemp=%3.3f°C\n",
+			magnetic_data.magnetX, magnetic_data.magnetY, magnetic_data.magnetZ, magnetic_data.temperature)
 		break
 	case PRESSURE:
 		pressure_data := Decode_Pressure(data_block)
 		if pressure_data == nil {
 			break
 		}
-		fmt.Printf("PRESSURE: \t\tpressure=%dPa\taltitude=%dcm\ttemperature=%3.3f°C\n",
+		fmt.Printf("PRESSURE: \tpre=%dPa\talt=%dcm\ttemp=%3.3f°C\n",
 			pressure_data.pressure, pressure_data.altitude, pressure_data.temperature)
 		break
 	case PORTSTAT:
-		//println("PORTSTAT")
+		port_status_data := Decode_PortStat(data_block)
+		if port_status_data == nil {
+			break
+		}
+		portvolt_data := port_status_data.ToAdcVoltage()
+		fmt.Printf("PORTSTAT: \td0=%6d\td1=%6d\td2=%6d\td3=%6d\nPORTVOLT: \tUd0=%.3fv\tUd1=%.3fv\tUd2=%.3fv\tUd3=%.3fv\n",
+			port_status_data.d0, port_status_data.d1, port_status_data.d2, port_status_data.d3,
+			portvolt_data.Ud0, portvolt_data.Ud1, portvolt_data.Ud2, portvolt_data.Ud3)
 		break
 	default:
-		fmt.Printf("UKNOWN: 0x%.2X\n", frame_id_bytearr[0])
+		fmt.Printf("UKNOWN: FrameID=0x%.2X\n", frame_id_bytearr[0])
 		return nil // unknown data type
 	}
 
