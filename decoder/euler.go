@@ -19,10 +19,10 @@ func Decode_Euler(payload []byte) *EulerData {
 	yawL := payload[4]
 	yawH := payload[5]
 
-	euler_data := new(EulerData)
-	euler_data.roll = float64(int16((uint16(rollH)<<8)|uint16(rollL))) / 32768 * 180
-	euler_data.pitch = float64(int16((uint16(pitchH)<<8)|uint16(pitchL))) / 32768 * 180
-	euler_data.yaw = float64(int16((uint16(yawH)<<8)|uint16(yawL))) / 32768 * 180
+	eulerData := new(EulerData)
+	eulerData.roll = float64(int16((uint16(rollH)<<8)|uint16(rollL))) / 32768 * 180
+	eulerData.pitch = float64(int16((uint16(pitchH)<<8)|uint16(pitchL))) / 32768 * 180
+	eulerData.yaw = float64(int16((uint16(yawH)<<8)|uint16(yawL))) / 32768 * 180
 
-	return euler_data
+	return eulerData
 }
