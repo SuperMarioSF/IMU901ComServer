@@ -2,7 +2,7 @@ package decoder
 
 import "go.bug.st/serial"
 
-const GYRO_PAYLOAD_SIZE = 12
+const GyroPayloadSize = 12
 
 type GyroData struct {
 	accX  float64
@@ -27,8 +27,8 @@ func GetDeviceGyroRange(port serial.Port) (DeviceGyroRange, error) {
 	return gyroRange, nil
 }
 
-func Decode_Gyro(payload []byte, gyroRange DeviceGyroRange) *GyroData {
-	if len(payload) != GYRO_PAYLOAD_SIZE {
+func DecodeGyro(payload []byte, gyroRange DeviceGyroRange) *GyroData {
+	if len(payload) != GyroPayloadSize {
 		return nil
 	}
 

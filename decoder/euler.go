@@ -1,6 +1,6 @@
 package decoder
 
-const EULER_PAYLOAD_SIZE int = 6 //bytes
+const EulerPayloadSize int = 6 //bytes
 
 type EulerData struct {
 	roll  float64
@@ -8,8 +8,8 @@ type EulerData struct {
 	yaw   float64
 }
 
-func Decode_Euler(payload []byte) *EulerData {
-	if len(payload) != EULER_PAYLOAD_SIZE {
+func DecodeEuler(payload []byte) *EulerData {
+	if len(payload) != EulerPayloadSize {
 		return nil // incorrect payload.
 	}
 	rollL := payload[0]

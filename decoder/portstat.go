@@ -1,6 +1,6 @@
 package decoder
 
-const PORTSTAT_PAYLOAD_SIZE = 8
+const PortstatPayloadSize = 8
 
 type PortStatData struct {
 	d0 uint16
@@ -25,8 +25,8 @@ func (portStat *PortStatData) ToAdcVoltage() PortStatVoltage {
 	}
 }
 
-func Decode_PortStat(payload []byte) *PortStatData {
-	if len(payload) != PORTSTAT_PAYLOAD_SIZE {
+func DecodePortstat(payload []byte) *PortStatData {
+	if len(payload) != PortstatPayloadSize {
 		return nil
 	}
 

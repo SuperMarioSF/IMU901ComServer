@@ -10,7 +10,7 @@ import (
 
 func main() {
 	GetAvailableSerialPorts()
-	main_loop(OpenSerialPort("COM6", GetDefaultMode()))
+	mainLoop(OpenSerialPort("COM6", GetDefaultMode()))
 }
 
 func GetAvailableSerialPorts() {
@@ -33,11 +33,11 @@ func GetDefaultMode() *serial.Mode {
 	return mode
 }
 
-func OpenSerialPort(port_name string, mode *serial.Mode) serial.Port {
+func OpenSerialPort(portName string, mode *serial.Mode) serial.Port {
 	//mode := &serial.Mode{
 	//	BaudRate: 115200,
 	//}
-	port, err := serial.Open(port_name, mode)
+	port, err := serial.Open(portName, mode)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -45,32 +45,17 @@ func OpenSerialPort(port_name string, mode *serial.Mode) serial.Port {
 	return port
 }
 
-func main_loop(port serial.Port) {
+func mainLoop(port serial.Port) {
 	var err error
 	gyroRange, errGyro := decoder.GetDeviceGyroRange(port)
 	if errGyro != nil {
 		log.Fatal(errGyro) // quit here
 	}
 	for {
-		err = decoder.Decode_Start(port, gyroRange)
+		err = decoder.DecodeStart(port, gyroRange)
 
 		if err == io.EOF {
 			return
 		}
 	}
 }
-
-//func print_char(port serial.Port) error {
-//	char := make([]byte, 1)
-//	n, err := port.Read(char)
-//	if err != nil {
-//		return err
-//	}
-//	if n == 0 {
-//		println("Not reading character...")
-//		return nil
-//	}
-//
-//	fmt.Printf("0x%.2x (%d)\n", char[0], char[0])
-//	return nil
-//}

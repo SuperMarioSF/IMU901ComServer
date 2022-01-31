@@ -1,6 +1,6 @@
 package decoder
 
-const MAGNETIC_PAYLOAD_SIZE int = 8
+const MagneticPayloadSize int = 8
 
 type MagneticData struct {
 	magnetX     float64
@@ -9,8 +9,8 @@ type MagneticData struct {
 	temperature float64
 }
 
-func Decode_Magnetic(payload []byte) *MagneticData {
-	if len(payload) != MAGNETIC_PAYLOAD_SIZE {
+func DecodeMagnetic(payload []byte) *MagneticData {
+	if len(payload) != MagneticPayloadSize {
 		return nil
 	}
 

@@ -1,6 +1,6 @@
 package decoder
 
-const PRESSURE_PAYLOAD_SIZE = 10
+const PressurePayloadSize = 10
 
 type PressureData struct {
 	pressure    int32   // unit: Pa
@@ -8,8 +8,8 @@ type PressureData struct {
 	temperature float64 // unit: °C
 }
 
-func Decode_Pressure(payload []byte) *PressureData {
-	if len(payload) < PRESSURE_PAYLOAD_SIZE {
+func DecodePressure(payload []byte) *PressureData {
+	if len(payload) < PressurePayloadSize {
 		return nil
 	}
 

@@ -1,6 +1,6 @@
 package decoder
 
-const QUATERNION_PAYLOAD_SIZE int = 8
+const QuaternionPayloadSize int = 8
 
 type QuaternionData struct {
 	q0 float64
@@ -9,8 +9,8 @@ type QuaternionData struct {
 	q3 float64
 }
 
-func Decode_Quatenion(payload []byte) *QuaternionData {
-	if len(payload) != QUATERNION_PAYLOAD_SIZE {
+func DecodeQuatenion(payload []byte) *QuaternionData {
+	if len(payload) != QuaternionPayloadSize {
 		return nil
 	}
 
