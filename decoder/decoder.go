@@ -99,20 +99,25 @@ func Decode_Start(port serial.Port, gyroRange DeviceGyroRange) error {
 		if gyro_data == nil {
 			break
 		}
-		fmt.Printf("GYRO: \t\taccX=%3.3f accY=%3.3f accZ=%3.3f gyroX=%3.3f gyroY=%3.3f gyroZ=%3.3f\n",
-			gyro_data.accX, gyro_data.accY, gyro_data.accZ, gyro_data.gyroX, gyro_data.gyroY, gyro_data.gyroZ)
+		//fmt.Printf("GYRO: \t\taccX=%3.3f accY=%3.3f accZ=%3.3f gyroX=%3.3f gyroY=%3.3f gyroZ=%3.3f\n",
+		//	gyro_data.accX, gyro_data.accY, gyro_data.accZ, gyro_data.gyroX, gyro_data.gyroY, gyro_data.gyroZ)
 		break
 	case MAGNETIC:
-		println("MAGNETIC")
+		magnetic_data := Decode_Magnetic(data_block)
+		if magnetic_data == nil {
+			break
+		}
+		fmt.Printf("MAGNETIC: \t\tmagX=%3.3f\tmagY=%3.3f\tmagZ=%3.3f\ttemp=%3.3f\n",
+			magnetic_data.magnetX, magnetic_data.magnetY, magnetic_data.magnetZ, magnetic_data.temperature)
 		break
 	case PRESSURE:
-		println("PRESSURE")
+		//println("PRESSURE")
 		break
 	case PORTSTAT:
-		println("PORTSTAT")
+		//println("PORTSTAT")
 		break
 	default:
-		println("UKNOWN")
+		fmt.Printf("UKNOWN: 0x%.2X\n", frame_id_bytearr[0])
 		return nil // unknown data type
 	}
 
