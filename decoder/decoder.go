@@ -83,23 +83,28 @@ func Decode_Start(port serial.Port) error {
 		if euler_data == nil {
 			break
 		}
-		fmt.Printf("EULER: roll=%3.3f\tpitch=%3.3f\tyaw=%3.3f\n",
+		fmt.Printf("EULER: \t\troll=%3.3f\tpitch=%3.3f\tyaw=%3.3f\n",
 			euler_data.roll, euler_data.pitch, euler_data.yaw)
 		break
 	case QUATERNION:
-		//println("QUATERNION")
+		quaternion_data := Decode_Quatenion(data_block)
+		if quaternion_data == nil {
+			break
+		}
+		fmt.Printf("QUATERNION: \tq0=%3.3f\tq1=%3.3f\tq2=%3.3f\tq3=%3.3f\n",
+			quaternion_data.q0, quaternion_data.q1, quaternion_data.q2, quaternion_data.q3)
 		break
 	case GYRO:
-		//println("GYRO")
+		println("GYRO")
 		break
 	case MAGNETIC:
-		//println("MAGNETIC")
+		println("MAGNETIC")
 		break
 	case PRESSURE:
-		//println("PRESSURE")
+		println("PRESSURE")
 		break
 	case PORTSTAT:
-		//println("PORTSTAT")
+		println("PORTSTAT")
 		break
 	default:
 		println("UKNOWN")
