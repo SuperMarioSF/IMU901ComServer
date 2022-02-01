@@ -3,7 +3,6 @@ package ws_server
 import (
 	"context"
 	"flag"
-	"fmt"
 	"log"
 	"net/http"
 )
@@ -83,6 +82,6 @@ func ProcessUpdateEvent(event string) {
 
 		return
 	}
-	GlobalMessagehub.broadcast <- []byte(fmt.Sprintf("{\"line\":%d, \"event\": %s}", line_number, event))
+	GlobalMessagehub.broadcast <- []byte(event)
 	line_number++
 }
