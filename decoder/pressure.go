@@ -1,11 +1,21 @@
 package decoder
 
+import "encoding/json"
+
 const PressurePayloadSize = 10
 
 type PressureData struct {
-	pressure    int32   // unit: Pa
-	altitude    int32   // unit: cm
-	temperature float64 // unit: °C
+	Pressure    int32   `json:"pressure"`    // unit: Pa
+	Altitude    int32   `json:"altitude"`    // unit: cm
+	Temperature float64 `json:"temperature"` // unit: °C
+}
+
+func (data *PressureData) ToJson() (string, error) {
+	j, e := json.Marshal(decodedDataStruct{
+		Source: "pressure",
+		Data:   *data,
+	})
+	return string(j), e
 }
 
 func DecodePressure(payload []byte) *PressureData {
@@ -26,9 +36,9 @@ func DecodePressure(payload []byte) *PressureData {
 
 	pressureData := new(PressureData)
 
-	pressureData.pressure = int32(p0) + int32(p1)<<8 + int32(p2)<<16 + int32(p3)<<24
-	pressureData.altitude = int32(a0) + int32(a1)<<8 + int32(a2)<<16 + int32(a3)<<24
-	pressureData.temperature = float64(int16(tH)<<8|int16(tL)) / 100.0
+	pressureData.Pressure = int32(p0) + int32(p1)<<8 + int32(p2)<<16 + int32(p3)<<24
+	pressureData.Altitude = int32(a0) + int32(a1)<<8 + int32(a2)<<16 + int32(a3)<<24
+	pressureData.Temperature = float64(int16(tH)<<8|int16(tL)) / 100.0
 
 	return pressureData
 }

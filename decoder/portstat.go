@@ -1,27 +1,57 @@
 package decoder
 
+import "encoding/json"
+
 const PortstatPayloadSize = 8
 
 type PortStatData struct {
-	d0 uint16
-	d1 uint16
-	d2 uint16
-	d3 uint16
+	D0 uint16 `json:"d0"`
+	D1 uint16 `json:"d1"`
+	D2 uint16 `json:"d2"`
+	D3 uint16 `json:"d3"`
 }
 
 type PortStatVoltage struct {
-	Ud0 float64
-	Ud1 float64
-	Ud2 float64
-	Ud3 float64
+	Ud0 float64 `json:"ud0"`
+	Ud1 float64 `json:"ud1"`
+	Ud2 float64 `json:"ud2"`
+	Ud3 float64 `json:"ud3"`
+}
+
+type FullPortStat struct {
+	PortStat   PortStatData    `json:"port_stat"`
+	ADCVoltage PortStatVoltage `json:"adc_voltage"`
+}
+
+func (data *FullPortStat) ToJson() (string, error) {
+	j, e := json.Marshal(decodedDataStruct{
+		Source: "full_port_stat",
+		Data:   *data,
+	})
+	return string(j), e
+}
+
+func (portStat *PortStatData) ToJson() (string, error) {
+	j, e := json.Marshal(decodedDataStruct{
+		Source: "port_stat",
+		Data:   *portStat,
+	})
+	return string(j), e
+}
+
+func (portStat *PortStatData) ToFullPortStat() *FullPortStat {
+	data := new(FullPortStat)
+	data.PortStat = *portStat
+	data.ADCVoltage = portStat.ToAdcVoltage()
+	return data
 }
 
 func (portStat *PortStatData) ToAdcVoltage() PortStatVoltage {
 	return PortStatVoltage{
-		Ud0: (float64(portStat.d0) / 4095) * 3.3, // unit: volt
-		Ud1: (float64(portStat.d1) / 4095) * 3.3, // unit: volt
-		Ud2: (float64(portStat.d2) / 4095) * 3.3, // unit: volt
-		Ud3: (float64(portStat.d3) / 4095) * 3.3, // unit: volt
+		Ud0: (float64(portStat.D0) / 4095) * 3.3, // unit: volt
+		Ud1: (float64(portStat.D1) / 4095) * 3.3, // unit: volt
+		Ud2: (float64(portStat.D2) / 4095) * 3.3, // unit: volt
+		Ud3: (float64(portStat.D3) / 4095) * 3.3, // unit: volt
 	}
 }
 
@@ -41,10 +71,10 @@ func DecodePortstat(payload []byte) *PortStatData {
 
 	portstatData := new(PortStatData)
 
-	portstatData.d0 = uint16(d0H)<<8 | uint16(d0L)
-	portstatData.d1 = uint16(d1H)<<8 | uint16(d1L)
-	portstatData.d2 = uint16(d2H)<<8 | uint16(d2L)
-	portstatData.d3 = uint16(d3H)<<8 | uint16(d3L)
+	portstatData.D0 = uint16(d0H)<<8 | uint16(d0L)
+	portstatData.D1 = uint16(d1H)<<8 | uint16(d1L)
+	portstatData.D2 = uint16(d2H)<<8 | uint16(d2L)
+	portstatData.D3 = uint16(d3H)<<8 | uint16(d3L)
 
 	return portstatData
 }

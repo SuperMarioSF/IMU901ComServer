@@ -1,12 +1,22 @@
 package decoder
 
+import "encoding/json"
+
 const QuaternionPayloadSize int = 8
 
 type QuaternionData struct {
-	q0 float64
-	q1 float64
-	q2 float64
-	q3 float64
+	Q0 float64 `json:"q0"`
+	Q1 float64 `json:"q1"`
+	Q2 float64 `json:"q2"`
+	Q3 float64 `json:"q3"`
+}
+
+func (data *QuaternionData) ToJson() (string, error) {
+	j, e := json.Marshal(decodedDataStruct{
+		Source: "quaternion",
+		Data:   *data,
+	})
+	return string(j), e
 }
 
 func DecodeQuatenion(payload []byte) *QuaternionData {
@@ -24,10 +34,10 @@ func DecodeQuatenion(payload []byte) *QuaternionData {
 	q3H := payload[7]
 
 	quaternionData := new(QuaternionData)
-	quaternionData.q0 = float64(int16((uint16(q0H)<<8)|uint16(q0L))) / 32768
-	quaternionData.q1 = float64(int16((uint16(q1H)<<8)|uint16(q1L))) / 32768
-	quaternionData.q2 = float64(int16((uint16(q2H)<<8)|uint16(q2L))) / 32768
-	quaternionData.q3 = float64(int16((uint16(q3H)<<8)|uint16(q3L))) / 32768
+	quaternionData.Q0 = float64(int16((uint16(q0H)<<8)|uint16(q0L))) / 32768
+	quaternionData.Q1 = float64(int16((uint16(q1H)<<8)|uint16(q1L))) / 32768
+	quaternionData.Q2 = float64(int16((uint16(q2H)<<8)|uint16(q2L))) / 32768
+	quaternionData.Q3 = float64(int16((uint16(q3H)<<8)|uint16(q3L))) / 32768
 
 	return quaternionData
 }

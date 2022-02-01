@@ -1,16 +1,19 @@
 package decoder
 
-import "go.bug.st/serial"
+import (
+	"encoding/json"
+	"go.bug.st/serial"
+)
 
 const GyroPayloadSize = 12
 
 type GyroData struct {
-	accX  float64
-	accY  float64
-	accZ  float64
-	gyroX float64
-	gyroY float64
-	gyroZ float64
+	AccX  float64 `json:"acc_x"`
+	AccY  float64 `json:"acc_y"`
+	AccZ  float64 `json:"acc_z"`
+	GyroX float64 `json:"gyro_x"`
+	GyroY float64 `json:"gyro_y"`
+	GyroZ float64 `json:"gyro_z"`
 }
 
 type DeviceGyroRange struct {
@@ -18,8 +21,17 @@ type DeviceGyroRange struct {
 	gyroRange  int
 }
 
+func (data *GyroData) ToJson() (string, error) {
+	j, e := json.Marshal(decodedDataStruct{
+		Source: "gyro",
+		Data:   *data,
+	})
+	return string(j), e
+
+}
+
 func GetDeviceGyroRange(port serial.Port) (DeviceGyroRange, error) {
-	// placeholder data
+	// placeholder Data
 	gyroRange := DeviceGyroRange{
 		accelRange: 1,
 		gyroRange:  2000,
@@ -46,12 +58,12 @@ func DecodeGyro(payload []byte, gyroRange DeviceGyroRange) *GyroData {
 	gZH := float64(payload[11])
 
 	gyroData := new(GyroData)
-	gyroData.accX = float64(int16((uint16(aXH)<<8)|uint16(aXL))) / 32768 * float64(gyroRange.accelRange)
-	gyroData.accY = float64(int16((uint16(aYH)<<8)|uint16(aYL))) / 32768 * float64(gyroRange.accelRange)
-	gyroData.accZ = float64(int16((uint16(aZH)<<8)|uint16(aZL))) / 32768 * float64(gyroRange.accelRange)
-	gyroData.gyroX = float64(int16((uint16(gXH)<<8)|uint16(gXL))) / 32768 * float64(gyroRange.gyroRange)
-	gyroData.gyroY = float64(int16((uint16(gYH)<<8)|uint16(gYL))) / 32768 * float64(gyroRange.gyroRange)
-	gyroData.gyroZ = float64(int16((uint16(gZH)<<8)|uint16(gZL))) / 32768 * float64(gyroRange.gyroRange)
+	gyroData.AccX = float64(int16((uint16(aXH)<<8)|uint16(aXL))) / 32768 * float64(gyroRange.accelRange)
+	gyroData.AccY = float64(int16((uint16(aYH)<<8)|uint16(aYL))) / 32768 * float64(gyroRange.accelRange)
+	gyroData.AccZ = float64(int16((uint16(aZH)<<8)|uint16(aZL))) / 32768 * float64(gyroRange.accelRange)
+	gyroData.GyroX = float64(int16((uint16(gXH)<<8)|uint16(gXL))) / 32768 * float64(gyroRange.gyroRange)
+	gyroData.GyroY = float64(int16((uint16(gYH)<<8)|uint16(gYL))) / 32768 * float64(gyroRange.gyroRange)
+	gyroData.GyroZ = float64(int16((uint16(gZH)<<8)|uint16(gZL))) / 32768 * float64(gyroRange.gyroRange)
 
 	return gyroData
 }
