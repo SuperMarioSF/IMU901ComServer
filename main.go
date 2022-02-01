@@ -1,61 +1,29 @@
 package main
 
 import (
-	"IMU901ComServer/decoder"
-	"fmt"
-	"go.bug.st/serial"
-	"io"
-	"log"
+	"IMU901ComServer/serial_port"
+	"IMU901ComServer/ws_server"
+	"os"
+	"os/signal"
 )
 
 func main() {
-	GetAvailableSerialPorts()
-	mainLoop(OpenSerialPort("COM6", GetDefaultMode()))
-}
 
-func GetAvailableSerialPorts() {
-	ports, err := serial.GetPortsList()
-	if err != nil {
-		log.Fatal(err)
-	}
-	if len(ports) == 0 {
-		log.Fatal("No serial ports found!")
-	}
-	for _, port := range ports {
-		fmt.Printf("Found port: %v\n", port)
-	}
-}
+	serialCloseSignal := make(chan struct{}, 1)
+	wsServerCloseSignal := make(chan struct{}, 1)
+	wsServerQuitWaitSignal := make(chan struct{}, 1)
 
-func GetDefaultMode() *serial.Mode {
-	mode := &serial.Mode{
-		BaudRate: 115200,
-	}
-	return mode
-}
+	go serial_port.SetupSerialPort(serialCloseSignal)
+	go ws_server.StartWSServerAndWait(wsServerCloseSignal, wsServerQuitWaitSignal)
 
-func OpenSerialPort(portName string, mode *serial.Mode) serial.Port {
-	//mode := &serial.Mode{
-	//	BaudRate: 115200,
-	//}
-	port, err := serial.Open(portName, mode)
-	if err != nil {
-		log.Fatal(err)
-	}
+	sigint := make(chan os.Signal, 1)
+	signal.Notify(sigint, os.Interrupt)
+	<-sigint
 
-	return port
-}
-
-func mainLoop(port serial.Port) {
-	var err error
-	gyroRange, errGyro := decoder.GetDeviceGyroRange(port)
-	if errGyro != nil {
-		log.Fatal(errGyro) // quit here
-	}
-	for {
-		err = decoder.DecodeStart(port, gyroRange)
-
-		if err == io.EOF {
-			return
-		}
-	}
+	// do shutdown
+	println("starting shutdown")
+	go close(serialCloseSignal)
+	go close(wsServerCloseSignal)
+	<-wsServerQuitWaitSignal
+	println("shutdown complete")
 }
