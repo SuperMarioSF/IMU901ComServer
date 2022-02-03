@@ -51,6 +51,7 @@ type Client struct {
 // reads from this goroutine.
 func (c *Client) readPump() {
 	defer func() {
+		log.Printf("Client disconnected: %s", c.conn.RemoteAddr().String())
 		c.hub.unregister <- c
 		c.conn.Close()
 	}()
@@ -119,6 +120,7 @@ func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256)}
+	log.Printf("Client connected: %s", client.conn.RemoteAddr().String())
 	client.hub.register <- client
 
 	// Allow collection of memory referenced by the caller by doing all work in

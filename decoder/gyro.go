@@ -3,6 +3,7 @@ package decoder
 import (
 	"encoding/json"
 	"go.bug.st/serial"
+	"log"
 )
 
 const GyroPayloadSize = 12
@@ -36,6 +37,7 @@ func GetDeviceGyroRange(port serial.Port) (DeviceGyroRange, error) {
 		accelRange: 1,
 		gyroRange:  2000,
 	}
+	log.Println("Gyro range data fetched from dummy data.")
 	return gyroRange, nil
 }
 

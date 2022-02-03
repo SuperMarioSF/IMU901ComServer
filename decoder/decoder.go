@@ -2,9 +2,9 @@ package decoder
 
 import (
 	"IMU901ComServer/ws_server"
-	"fmt"
 	"go.bug.st/serial"
 	"io"
+	"log"
 )
 
 const EULER uint8 = 0x01
@@ -136,7 +136,7 @@ func DecodeStart(port serial.Port, gyroRange DeviceGyroRange) error {
 		doUpdateMessage(portStatusData.ToFullPortStat())
 		break
 	default:
-		fmt.Printf("UKNOWN: FrameID=0x%.2X\n", frameId)
+		log.Printf("IMU901: received unknown frame: FrameID=0x%.2X\n", frameId)
 		return nil // unknown Data type
 	}
 

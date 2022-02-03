@@ -13,15 +13,17 @@ var ServerReady bool = false
 var GlobalMessagehub *Hub = newHub()
 
 func StartWSServerAndWait(closeSignal chan struct{}, quitWaitChan chan struct{}) {
-	flag.Parse()
+	log.Println("Starting message hub")
 	hub := GlobalMessagehub
 	go hub.run()
+	log.Println("Starting websocket handler")
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(hub, w, r)
 	})
 
 	serverChan := make(chan *http.Server, 1)
 	waitChan := make(chan struct{}, 1)
+	log.Printf("Starting websocket listener at '%s'", *addr)
 	go getServerAndListen(*addr, nil, serverChan, waitChan)
 
 	serverCtl = <-serverChan
@@ -31,11 +33,13 @@ func StartWSServerAndWait(closeSignal chan struct{}, quitWaitChan chan struct{})
 	go func(closeSignal chan struct{}, serverCtl *http.Server) {
 		if closeSignal != nil {
 			<-closeSignal
+			log.Println("Received close signal, shutting down websocket server...")
 			go internalShutdownServerAndWait(serverCtl)
+			log.Println("Wait for remaining connections to close")
 		}
 	}(closeSignal, serverCtl)
-
 	<-waitChan
+	log.Println("websocket server shutdown complete")
 
 	if quitWaitChan != nil {
 		close(quitWaitChan)
